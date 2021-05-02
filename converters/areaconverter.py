@@ -6,16 +6,22 @@ class AreaConverter:
     def __init__(self):
         self.area = Area()
         self.area_conversion_value_table = {
-            'sqmm': 1, 'sqcm': 100, 'sqdm': 1000, 'sqm': 1e+6, 'sqdam': 1e+8, 'sqhm': 1e+10, 'sqkm': 1e+12,
-            'sqM': 2.59e+12, 'sqinch': 645.16, 'sqyard': 836127, 'sqft': 92903, 'ha': 1e+10, 'acre': 4.047e+9
+            'sqmm':        1, 'sqcm':      100, 'sqdm':     1000, 'sqm':      1e+6, 'sqdam': 1e+8, 'sqhm': 1e+10,
+            'sqkm':    1e+12, 'sqM':  2.59e+12, 'sqinch': 645.16, 'sqyard': 836127, 'sqft': 92903, 'ha':   1e+10,
+            'acre': 4.047e+9
         }
         self.name_conversion_table = {
-            'square millimeter': 'sqmm', 'squaremillmeter': 'sqmm', 'square decimeter': 'sqdm',
-            'squaredecimeter': 'sqdm', 'square meter': 'sqm', 'squaremeter': 'sqm', 'square decameter': 'sqdam',
-            'squaredecameter': 'sqdam', 'square hectometer': 'sqhm', 'squarehectometer': 'sqhm',
-            'square kilometer': 'sqkm', 'squarekilometer': 'sqkm', 'square mile': 'sqM', 'squaremile': 'sqM',
-            'squareinch': 'sqinch', 'square inch': 'sqinch', 'square yard': 'sqyd', 'squareyard': 'sqyd',
-            'squarefoot': 'sqft', 'square foot': 'sqft', 'hectare': 'ha', 'acre': 'acre'
+            'square millimeter': 'sqmm',     'squaremillmeter':  'sqmm',
+            'square decimeter':  'sqdm',     'squaredecimeter':  'sqdm',
+            'square meter':       'sqm',     'squaremeter':       'sqm',
+            'square decameter': 'sqdam',     'squaredecameter': 'sqdam',
+            'square hectometer': 'sqhm',     'squarehectometer': 'sqhm',
+            'square kilometer':  'sqkm',     'squarekilometer':  'sqkm',
+            'square mile':        'sqM',     'squaremile':        'sqM',
+            'square inch':     'sqinch',     'squareinch':     'sqinch',
+            'square yard':       'sqyd',     'squareyard':       'sqyd',
+            'squarefoot':        'sqft',     'square foot':      'sqft',
+            'hectare':             'ha',     'acre':             'acre'
         }
         self.area_units = [u for u in list(Area.__dict__.keys()) if not u.startswith('__')]
 

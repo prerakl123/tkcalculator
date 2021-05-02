@@ -1,19 +1,21 @@
 class Pressure:
-    bar, atm, Pa, kPa, torr, mmHg, lbsqinch = [0] * 8
+    bar, atm, Pa, kPa, torr, mmHg, lbsqinch = [0] * 7
 
 
 class PressureConverter:
     def __init__(self):
         self.pressure = Pressure()
         self.bar_conversion_value_table = {
-            'bar': 1, 'atm': 1.01325, 'Pa': 1e-5, 'kPa': 0.01, 'torr': 0.00133322, 'mmHg': 0.001333,
-            'lbsqinch': 0.0689476
+            'bar':           1, 'atm':   1.01325, 'Pa':            1e-5, 'kPa': 0.01,
+            'torr': 0.00133322, 'mmHg': 0.001333, 'lbsqinch': 0.0689476
         }
         self.name_conversion_table = {
-            'bar': 'bar', 'atmosphere': 'atm', 'standard atmosphere': 'atm', 'pascal': 'Pa', 'kilopascal': 'kPa',
-            'torr': 'torr', 'millimeters of mercury': 'mmHg', 'millimeter mercury': 'mmHg', 'millimetermercury': 'mmHg',
-            'pounds per square inch': 'lbsqinch', 'pound square inch': 'lbsqinch', 'poundpersquareinch': 'lbsqinch',
-            'poundsquareinch': 'lbsqinch'
+            'bar':        'bar', 'millimeters of mercury': 'mmHg', 'atmosphere':          'atm',
+            'pascal':      'Pa', 'millimetermercury':      'mmHg', 'standard atmosphere': 'atm',
+            'kilopascal': 'kPa', 'millimeter mercury':     'mmHg', 'torr': 'torr',
+
+            'pounds per square inch': 'lbsqinch', 'pound square inch': 'lbsqinch',
+            'poundpersquareinch':     'lbsqinch', 'poundsquareinch':   'lbsqinch'
         }
         self.pressure_units = [u for u in list(Pressure.__dict__.keys()) if not u.startswith('__')]
 

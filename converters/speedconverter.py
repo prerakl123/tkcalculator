@@ -7,11 +7,13 @@ class SpeedConverter:
     def __init__(self):
         self.speed = Speed()
         self.mmps_conversion_value_table = {
-            'mmps': 1, 'cmps': 10, 'dmps': 100, 'mps': 1000, 'damps': 1e+4, 'hmps': 1e+5, 'kmps': 1e+6, 'ftps': 304.8,
-            'Mps': 1.609e+6, 'mmpm': 0.0166667, 'cmpm': 0.166667, 'dmpm': 1.66667, 'mpm': 16.66667, 'dampm': 166.66667,
-            'hmpm': 1666.66667, 'kmpm': 16666.66667, 'ftpm': 5.08, 'Mpm': 26822.4, 'mmph': 0.000277778,
-            'cmph': 0.00277778, 'dmph': 0.0277778, 'mph': 0.277778, 'damph': 2.77778, 'hmph': 27.77778,
-            'kmph': 277.77778, 'ftph': 0.0846667, 'Mph': 447.04, 'knot': 514.444
+            'mmps':     1, 'ftps':      304.8, 'hmpm':  1666.66667, 'mph':   0.277778,
+            'cmps':    10, 'Mps':    1.609e+6, 'kmpm': 16666.66667, 'damph':  2.77778,
+            'dmps':   100, 'mmpm':  0.0166667, 'ftpm':        5.08, 'hmph':  27.77778,
+            'mps':   1000, 'cmpm':   0.166667, 'Mpm':      26822.4, 'kmph': 277.77778,
+            'damps': 1e+4, 'dmpm':    1.66667, 'mmph': 0.000277778, 'ftph': 0.0846667,
+            'hmps':  1e+5, 'mpm':    16.66667, 'cmph':  0.00277778, 'Mph':     447.04,
+            'kmps':  1e+6, 'dampm': 166.66667, 'dmph':   0.0277778, 'knot':   514.444
         }
         self.name_conversion_table = {
             'millimeter per second': 'mmps', 'millimeterpersecond': 'mmps', 'millimeter per minute': 'mmpm',

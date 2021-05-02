@@ -6,17 +6,18 @@ class EnergyConverter:
     def __init__(self):
         self.energy = Energy()
         self.joule_conversion_value_table = {
-            'J': 1, 'kJ': 1000, 'Cal': 4.184, 'kCal': 4184, 'Wh': 3600, 'kWh': 3.6*(10**6), 'eV': 1.6022e-19,
-            'BTU': 1055.06, 'thm': 1.055e+8, 'ftlb': 1.35582
+            'J':                 1, 'kJ':       1000, 'Cal':   4.184, 'kCal':    4184, 'Wh':      3600,
+            'kWh': 3.6 * (10 ** 6), 'eV': 1.6022e-19, 'BTU': 1055.06, 'thm': 1.055e+8, 'ftlb': 1.35582
         }
         "Values for the conversion of all the units in joules"
         self.name_conversion_table = {
-            'joule': 'J', 'kilojoule': 'kJ', 'calorie': 'Cal', 'gram.calorie': 'Cal', 'gram calorie': 'Cal',
-            'gramcalorie': 'Cal', 'gram-calorie': 'Cal', 'kilocalorie': 'kCal', 'watt-hour': 'Wh', 'watthour': 'Wh',
-            'watt.hour': 'Wh', 'kilowatthour': 'kWh', 'kilowatt.hour': 'kWh', 'kilowatt-hour': 'kWh',
-            'electronvolt': 'eV', 'electron-volt': 'eV', 'british thermal unit': 'BTU', 'britishthermalunit': 'BTU',
-            'us therm': 'thm', 'ustherm': 'thm', 'therm': 'thm', 'foot-pound': 'ftlb', 'foot.pound': 'ftlb',
-            'footpound': 'ftlb', 'foot pound': 'ftlb'
+            'joule':          'J', 'kilocalorie':  'kCal', 'electron-volt':         'eV', 'foot-pound': 'ftlb',
+            'kilojoule':     'kJ', 'watt-hour':      'Wh', 'electronvolt':          'eV', 'foot.pound': 'ftlb',
+            'calorie':      'Cal', 'watthour':       'Wh', 'british thermal unit': 'BTU', 'footpound':  'ftlb',
+            'gram.calorie': 'Cal', 'watt.hour':      'Wh', 'britishthermalunit':   'BTU', 'foot pound': 'ftlb',
+            'gram calorie': 'Cal', 'kilowatthour':  'kWh', 'us therm':             'thm',
+            'gramcalorie':  'Cal', 'kilowatt.hour': 'kWh', 'ustherm':              'thm',
+            'gram-calorie': 'Cal', 'kilowatt-hour': 'kWh', 'therm':                'thm'
         }
         "Short forms of all the units"
         self.energy_units = [i for i in list(Energy.__dict__.keys()) if not i.startswith('__')]
