@@ -18,9 +18,12 @@ class AngleConverter:
             'arcs': 1 / 3600
         }
         self.name_conversion_table = {
-            'degree': 'deg', 'radian': 'rad', 'milliradian': 'mrad', 'gradian': 'grad', 'second of arc': 'arcs',
-            'secondofarc': 'arcs', 'arcsec': 'arcs', 'arcsecond': 'arcs', 'arc second': 'arcs', 'minute of arc': 'arcm',
-            'minuteofarc': 'arcm', 'arcmin': 'arcm', 'arcminute': 'arcm', 'arc minute': 'arcm'
+            'degree':   'deg',
+            'radian':   'rad', 'milliradian': 'mrad', 'mradian': 'mrad',
+            'gradian': 'grad',
+
+            'second of arc': 'arcs', 'secondofarc': 'arcs', 'arcsec': 'arcs', 'arcsecond': 'arcs', 'arc second': 'arcs',
+            'minute of arc': 'arcm', 'minuteofarc': 'arcm', 'arcmin': 'arcm', 'arcminute': 'arcm', 'arc minute': 'arcm'
         }
         self.one_circle_value = {
             'deg': 360, 'rad': 2 * math.pi, 'mrad': 2 * math.pi * 1000, 'grad': 400, 'arcs': 1296000, 'arcm': 21600
@@ -47,5 +50,5 @@ class AngleConverter:
 
 if __name__ == '__main__':
     c = AngleConverter()
-    s = c.convert(9000, 'deg')
+    s = c.convert(9000, 'grad')
     print(s.__dict__)

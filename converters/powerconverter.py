@@ -9,9 +9,9 @@ class PowerConverter:
             'W': 1, 'kW': 1000, 'hsp': 745.699, 'ftlb': 0.022597, 'BTU': 17.58427, 'thm': 29307.22
         }
         self.name_conversion_table = {
-            'watt': 'W', 'kilowatt': 'kW', 'horsepower': 'hsp', 'footpound': 'ftlb', 'british thermal unit': 'BTU',
-            'btu': 'BTU', 'britishthermalunit': 'BTU', 'therm': 'thm', 'us thermal unit': 'thm',
-            'usthermalunit': 'thm'
+            'watt':                   'W', 'kilowatt':       'kW', 'horsepower':         'hsp', 'footpound': 'ftlb',
+            'british thermal unit': 'BTU', 'btu':           'BTU', 'britishthermalunit': 'BTU', 'therm':      'thm',
+            'us thermal unit':      'thm', 'usthermalunit': 'thm'
         }
         self.power_units = [u for u in list(Power.__dict__.keys()) if not u.startswith('__')]
 

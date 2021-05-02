@@ -3,6 +3,7 @@ import requests
 import json
 import urllib.request
 import time
+import inspect
 
 
 class CurrencyConverter:
@@ -38,6 +39,8 @@ class CurrencyConverter:
         self.from_currency = ''
         self.to_currency = ''
         self.conversion_dict = dict()
+        self.module_folder = os.path.dirname(os.path.abspath(inspect.getsourcefile(self.__class__)))
+        self.module_folder = self.module_folder.replace('/', '\\').rstrip('\\')
 
         # The function below can be called parallel to any other by multiprocessing or threading
         # self.update_currencies()
@@ -107,10 +110,10 @@ class CurrencyConverter:
             self.from_currency = from_currency
         if to_currency:
             self.to_currency = to_currency
-        with open(f'currencies/{from_currency}.json', 'r') as file:
+        with open(f'{self.module_folder}\\currencies\\{from_currency}.json', 'r') as file:
             self.conversion_dict = json.load(file)
 
-    def to_json(self, folder: str, data: dict, name: str = None) -> bool:
+    def to_json(self, data: dict, name: str = None) -> bool:
         """
         Writes `data` dictionary to JSON file of `name`.
 
@@ -119,7 +122,6 @@ class CurrencyConverter:
         :param folder: name of the folder containing JSON files for conversions
         :returns: True if file.write() successful else False
         """
-        folder = folder.replace('/', '\\')
         try:
             if name:
                 if not name.endswith('.json'):
@@ -127,7 +129,7 @@ class CurrencyConverter:
             else:
                 name = data['base'] + '.json'
             json_object = json.dumps(data, indent=4)
-            with open(f"{folder}\\{name}", 'w') as file:
+            with open(f"{self.module_folder}\\currencies\\{name}", 'w') as file:
                 file.write(json_object)
                 file.close()
             return True
@@ -144,7 +146,7 @@ class CurrencyConverter:
             print(e)
             return False
 
-    def update_currencies(self, folder: str):
+    def update_currencies(self):
         """
         Updates the current value of the currencies as per
         the current date.
@@ -152,7 +154,6 @@ class CurrencyConverter:
         :return: None
         """
         today = time.localtime()
-        folder = folder.replace('/', '\\')
         if len(str(today.tm_mday)) < 2:
             today = f"{today.tm_year}-{today.tm_mon}-0{today.tm_mday}"
         elif len(str(today.tm_mon)) < 2:
@@ -161,13 +162,13 @@ class CurrencyConverter:
             today = f"{today.tm_year}-{today.tm_mon}-{today.tm_mday}"
         if self.is_connected():
             for cur in self.currencies:
-                with open(f'{folder}\\{cur}.json', 'r') as file:
+                with open(f'{self.module_folder}\\currencies\\{cur}.json', 'r') as file:
                     dict_ = json.load(file)
                     if dict_['date'] == today:
                         pass
                     else:
                         data = requests.get(self.URL + cur).json()
-                        self.to_json(folder, data, name=cur)
+                        self.to_json(data, name=cur)
         else:
             raise ConnectionError('No Internet Connection found. Currencies cannot be updated to the latest values.')
 
@@ -175,5 +176,7 @@ class CurrencyConverter:
 if __name__ == '__main__':
     converter = CurrencyConverter()
     converter.set_currencies('INR', 'USD')
-    print(converter.convert(69, 4))
-    converter.update_currencies(os.getcwd() + '\\currencies')
+    print(converter.convert(74.82, 5))
+    # s = open(converter.module_folder + '\\currencies\\INR.json')
+    # print(s.read())
+    converter.update_currencies()
