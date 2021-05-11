@@ -15,11 +15,14 @@ AREACONVERTER = 'areaconverter'
 CURRENCYCONVERTER = 'currencyconverter'
 "Currency Converter (INR, USD, MYR, etc)"
 
-DATACONVERTER = 'dataconverter'
-"Data Converter (KB, MB, GB, etc)"
+DATATRANSFERRATECONVERTER = 'datatransferrateconverter'
+"Data Transfer Rate Converter (KB/s, MB/s, GB/s, etc)"
 
 DATEDIFFERENCE = 'datedifference'
 "Difference between two dates, add or subtract values in dates"
+
+DIGITALSTORAGECONVERTER = 'digitalstorageconverter'
+"Digital Storage Converter (MB, GB, TB, etc)"
 
 ENERGYCONVERTER = 'energyconverter'
 "Energy Converter (J, eV, Cal, etc)"

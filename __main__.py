@@ -1,2 +1,2 @@
-from tkcalculator import *
+from calculator import *
 from customwidgets import *

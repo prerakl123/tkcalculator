@@ -392,37 +392,35 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # #     MULTI PROCESSING     # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                                                                                                     #
-import os                                                                                                             #
-import time                                                                                                           #
-from converters import CurrencyConverter                                                                              #
-from converters import DigitalStorageConverter                                                                        #
-import multiprocessing                                                                                                #
-#                                                                                                                     #
-c_con = CurrencyConverter()                                                                                           #
-ds_con = DigitalStorageConverter()                                                                                    #
+
+import time
+from converters import CurrencyConverter
+from converters import DigitalStorageConverter
+import multiprocessing
+
+c_con = CurrencyConverter()
+ds_con = DigitalStorageConverter()
 
 
-def ask_conversion():                                                                                                 #
-    val_list = [[7692436, 'KB'], [152894, 'GB'], [89523, 'MiB'], [714689, 'B'], [69746823, 'PB'],                     #
-                [72589256784296, 'b'], [6489231, 'Kib'], [564295, 'TB'], [6358923, 'GiB'], [57265944, 'EiB'],         #
-                [6258936893, 'Eib'], [6589235440, 'PiB'], [89576237523590, 'Gib'], [6258936203560, 'EB'],             #
-                [1092741856, 'Tib']]                                                                                  #
-    for values in val_list:                                                                                           #
-        val, unit1 = float(values[0]), values[1]                                                                      #
-        conv = ds_con.convert(val, unit1)  #
-        time.sleep(2)                                                                                                 #
-        print(conv.__dict__)                                                                                          #
+def ask_conversion():
+    val_list = [[7692436, 'KB'], [152894, 'GB'], [89523, 'MiB'], [714689, 'B'], [69746823, 'PB'],
+                [72589256784296, 'b'], [6489231, 'Kib'], [564295, 'TB'], [6358923, 'GiB'], [57265944, 'EiB'],
+                [6258936893, 'Eib'], [6589235440, 'PiB'], [89576237523590, 'Gib'], [6258936203560, 'EB'],
+                [1092741856, 'Tib']]
+    for values in val_list:
+        val, unit1 = float(values[0]), values[1]
+        conv = ds_con.convert(val, unit1)
+        time.sleep(2)
+        print(conv.__dict__)
 
 
-if __name__ == '__main__':                                                                                            #
-    p1 = multiprocessing.Process(target=ask_conversion)                                                               #
-    p2 = multiprocessing.Process(target=c_con.update_currencies,                                                      #
-                                 kwargs={'folder': str(os.getcwd() + '\\converters\\currencies')})                    #
-    p1.start()                                                                                                        #
-    p2.start()                                                                                                        #
-    print('that\'s done')                                                                                             #
-#                                                                                                                     #
+if __name__ == '__main__':
+    p1 = multiprocessing.Process(target=ask_conversion)
+    p2 = multiprocessing.Process(target=c_con.update_currencies,)
+    p1.start()
+    p2.start()
+    print('that\'s done')
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # #     MULTI PROCESSING     # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -441,3 +439,33 @@ if __name__ == '__main__':                                                      
 #
 # c = CurrencyConverter()
 # c.update_currencies(os.getcwd() + '\\converters\\currencies')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# lis = ['area', 'currency', 'datatransferrate', 'digitalstorage', 'energy', 'length', 'power', 'pressure', 'speed',
+#        'temperature', 'time', 'volume', 'weightandmass']
+#
+# for i in lis:
+#     with open(f'data/{i}_b64_UNICODE_bw', 'w') as bw_file, open(f'data/{i}_b64_UNICODE_color', 'w') as col_file:
+#         print(f'{i} done')

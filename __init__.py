@@ -1,1 +1,1 @@
-from tkcalculator import *
+from calculator import *
