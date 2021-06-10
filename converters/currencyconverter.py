@@ -5,35 +5,35 @@ import urllib.request
 import time
 import inspect
 
+CURRENCIES = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN',
+              'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF',
+              'CLP', 'CNY', 'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD', 'EGP', 'ERN',
+              'ETB', 'EUR', 'FJD', 'FKP', 'FOK', 'GBP', 'GEL', 'GGP', 'GHS', 'GIP', 'GMD', 'GNF', 'GTQ', 'GYD',
+              'HKD', 'HNL', 'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JMD', 'JOD',
+              'JPY', 'KES', 'KGS', 'KHR', 'KID', 'KMF', 'KRW', 'KWD', 'KYD', 'KZT', 'LAK', 'LBP', 'LKR', 'LRD',
+              'LSL', 'LYD', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRU', 'MUR', 'MVR', 'MWK', 'MXN',
+              'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR',
+              'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP',
+              'SLL', 'SOS', 'SRD', 'SSP', 'STN', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY', 'TTD',
+              'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV', 'WST', 'XAF', 'XCD',
+              'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW']
+"Names of Currencies"
+
 
 class CurrencyConverter:
     """
     Currency converter which converts from one currency to
-    another based on the data from `URL` below.
+    another based on the data from `_URL` below.
     """
     
     # Constants
-    URL = 'https://api.exchangerate-api.com/v4/latest/'
+    _URL = 'https://api.exchangerate-api.com/v4/latest/'
     "URL for getting all the conversion info"
-    
-    currencies = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN',
-                  'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF',
-                  'CLP', 'CNY', 'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD', 'EGP', 'ERN',
-                  'ETB', 'EUR', 'FJD', 'FKP', 'FOK', 'GBP', 'GEL', 'GGP', 'GHS', 'GIP', 'GMD', 'GNF', 'GTQ', 'GYD',
-                  'HKD', 'HNL', 'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JMD', 'JOD',
-                  'JPY', 'KES', 'KGS', 'KHR', 'KID', 'KMF', 'KRW', 'KWD', 'KYD', 'KZT', 'LAK', 'LBP', 'LKR', 'LRD',
-                  'LSL', 'LYD', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRU', 'MUR', 'MVR', 'MWK', 'MXN',
-                  'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR',
-                  'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP',
-                  'SLL', 'SOS', 'SRD', 'SSP', 'STN', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY', 'TTD',
-                  'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV', 'WST', 'XAF', 'XCD',
-                  'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW']
-    "Names of Currencies"
-    
+
     def __init__(self):
         """
         Initialize the converter. Check all the JSON files.
-        Connect to `self.URL` and download necessary
+        Connect to `self._URL` and download necessary
         conversion data.
         """
         self.from_currency = ''
@@ -56,7 +56,24 @@ class CurrencyConverter:
         # limiting the precision to `n` decimal places
         return amount
 
-    def from_json(self, currency) -> dict:
+    def date_today(self) -> str:
+        today = time.localtime()
+        if len(str(today.tm_mday)) < 2:
+            today = f"{today.tm_year}-{today.tm_mon}-0{today.tm_mday}"
+        elif len(str(today.tm_mon)) < 2:
+            today = f"{today.tm_year}-0{today.tm_mon}-{today.tm_mday}"
+        else:
+            today = f"{today.tm_year}-{today.tm_mon}-{today.tm_mday}"
+        return today
+
+    def get_currencies(self) -> list:
+        """
+        Get the currently set 'from' and 'to' currencies
+        :return: list with 'from' and 'to' currencies
+        """
+        return [self.from_currency, self.to_currency]
+
+    def get_json(self, currency) -> dict:
         """
         Can provide currency name or the JSON filename as
         parameter, both are acceptable.
@@ -75,13 +92,6 @@ class CurrencyConverter:
 
         except json.JSONDecodeError as jde_err:
             return {'error': jde_err}
-
-    def get_currencies(self) -> list:
-        """
-        Get the currently set 'from' and 'to' currencies
-        :return: list with 'from' and 'to' currencies
-        """
-        return [self.from_currency, self.to_currency]
 
     @staticmethod
     def is_connected() -> bool:
@@ -119,7 +129,6 @@ class CurrencyConverter:
 
         :param data: the data dictionary
         :param name: Optional: name of the JSON file
-        :param folder: name of the folder containing JSON files for conversions
         :returns: True if file.write() successful else False
         """
         try:
@@ -153,21 +162,30 @@ class CurrencyConverter:
         Note: The values are updated once everyday on the website
         :return: None
         """
-        today = time.localtime()
-        if len(str(today.tm_mday)) < 2:
-            today = f"{today.tm_year}-{today.tm_mon}-0{today.tm_mday}"
-        elif len(str(today.tm_mon)) < 2:
-            today = f"{today.tm_year}-0{today.tm_mon}-{today.tm_mday}"
-        else:
-            today = f"{today.tm_year}-{today.tm_mon}-{today.tm_mday}"
         if self.is_connected():
-            for cur in self.currencies:
+            for cur in CURRENCIES:
                 with open(f'{self.module_folder}\\currencies\\{cur}.json', 'r') as file:
                     dict_ = json.load(file)
-                    if dict_['date'] == today:
+                    if dict_['date'] == self.date_today():
                         pass
                     else:
-                        data = requests.get(self.URL + cur).json()
+                        data = requests.get(self._URL + cur).json()
+                        self.to_json(data, name=cur)
+        else:
+            raise ConnectionError('No Internet Connection found. Currencies cannot be updated to the latest values.')
+
+    def update_currency(self, *currencies):
+        if len(currencies) == 0:
+            raise ValueError('Currencies Not Specified')
+
+        if self.is_connected():
+            for cur in currencies:
+                with open(f'{self.module_folder}\\currencies\\{cur}.json', 'r') as file:
+                    dict_ = json.load(file)
+                    if dict_['date'] == self.date_today():
+                        pass
+                    else:
+                        data = requests.get(self._URL + cur).json()
                         self.to_json(data, name=cur)
         else:
             raise ConnectionError('No Internet Connection found. Currencies cannot be updated to the latest values.')
