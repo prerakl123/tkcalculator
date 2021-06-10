@@ -15,8 +15,8 @@ CURRENCIES = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZ
               'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR',
               'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP',
               'SLL', 'SOS', 'SRD', 'SSP', 'STN', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY', 'TTD',
-              'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV', 'WST', 'XAF', 'XCD',
-              'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW']
+              'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV']    # , 'WST', 'XAF', 'XCD',
+              # 'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW']
 "Names of Currencies"
 
 
@@ -27,8 +27,8 @@ class CurrencyConverter:
     """
     
     # Constants
-    _URL = 'https://api.exchangerate-api.com/v4/latest/'
-    "URL for getting all the conversion info"
+    _URL = 'https://api.exchangerate-api.com/v4/latest/'    # Another URL to use is 'https://api.exchangerate.host/latest?base=USD'
+    "URL for getting all the conversion info"               # JSON struct = JSON['motd']['rates'][CURRENCY]
 
     def __init__(self):
         """
@@ -162,17 +162,7 @@ class CurrencyConverter:
         Note: The values are updated once everyday on the website
         :return: None
         """
-        if self.is_connected():
-            for cur in CURRENCIES:
-                with open(f'{self.module_folder}\\currencies\\{cur}.json', 'r') as file:
-                    dict_ = json.load(file)
-                    if dict_['date'] == self.date_today():
-                        pass
-                    else:
-                        data = requests.get(self._URL + cur).json()
-                        self.to_json(data, name=cur)
-        else:
-            raise ConnectionError('No Internet Connection found. Currencies cannot be updated to the latest values.')
+        self.update_currency(*CURRENCIES)
 
     def update_currency(self, *currencies):
         if len(currencies) == 0:
