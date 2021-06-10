@@ -1,3 +1,4 @@
+# customwidgets.py
 from tkinter import *
 
 
@@ -51,97 +52,130 @@ class FadingWindow(Toplevel):
             self.stopout = True
 
 
-class ShrinkingWindow(Toplevel):
-    """
-     Window with shrink and grow effects
-     Windows decorators are turned off
-    """
+class ScrollableFrame(Frame):
+    def __init__(self, master, **kw):
+        Frame.__init__(self, master, **kw)
+        self.canvas = Canvas(self, relief=FLAT)
+        v_scroll = Scrollbar(self, orient=VERTICAL)
+        h_scroll = Scrollbar(self, orient=HORIZONTAL)
 
-    def __init__(self, master, by_height=False, max_height=500, max_width=500, **kw):
-        """
-        Initialize the shrinking window.
-        if `by_height` is True, shrinks window by height else by width
-        upto `max_height` or `max_width` accordingly.
+        v_scroll.config(command=self.canvas.yview)
+        h_scroll.config(command=self.canvas.xview)
+        self.canvas.config(yscrollcommand=v_scroll.set, xscrollcommand=h_scroll.set)
 
-        :param master: parent widget
-        :param by_height: shrink by height or width
-        :param max_width: maximum width for "growing" window
-        :param max_height: maximum height for "growing" window
-        """
-        Toplevel.__init__(self, master, **kw)
-        self.overrideredirect(1)
-        self.geometry('500x500')
+        v_scroll.pack(side=RIGHT, fill=Y)
+        h_scroll.pack(side=BOTTOM, fill=X)
+        self.canvas.pack(side=LEFT, expand=YES, fill=BOTH)
+
+        self.widget_frame = Frame(self.canvas)
+        self.canvas.create_window(0, 0, window=self.widget_frame, anchor=NW)
+
+        self.bind('<Configure>', self.on_interior_config)
+        self.bind_all('<MouseWheel>', self.on_mouse_wheel)
+
+    @staticmethod
+    def pack_multiple_widgets(*widgets, **kwargs):
+        if len(kwargs.items()) < 1:
+            for i in widgets:
+                i.pack()
+        else:
+            for i in widgets:
+                i.pack(**kwargs)
+
+    def on_interior_config(self, event=None):
         self.update_idletasks()
-        self.update()
+        width, height = self.widget_frame.winfo_reqwidth(), self.widget_frame.winfo_reqheight()
+        self.canvas.config(scrollregion=(0, 0, width, height))
 
-        self.master = master
+    def on_mouse_wheel(self, event=None):
+        shift_scroll = (event.state & 0x1) != 0
+        scroll = -1 if event.delta > 0 else 1
+        if shift_scroll:
+            self.canvas.xview_scroll(scroll, 'units')
+        else:
+            self.canvas.yview_scroll(scroll, 'units')
+
+
+class ShrinkingWidthHeightWindow(Toplevel):
+    def __init__(self, widget: Widget, speed=5, by_height=False, max_height=500, max_width=500, **kw):
+        Toplevel.__init__(self, widget, **kw)
+        self.overrideredirect(1)
+        self.update_idletasks()
+        self.wm_attributes('-topmost', 1)
+        self.config(highlightthickness=1, highlightbackground='black')
+        widget.focus_force()
+
+        self.visible = False
+
+        self.widget = widget
+        self.speed = speed
         self.by_height = by_height
         self.max_height = max_height
         self.max_width = max_width
-        self.stopgrow = False
-        self.stopshrink = False
-        self.org_height = int(self.geometry().split('+')[0].split('x')[0])
-        self.org_width = int(self.geometry().split('+')[0].split('x')[1])
+        self.close_button = Label(self, text=" ✕ Close", font='Helvetica 12', bd=0, anchor=W, relief=FLAT)
+        self.close_button.bind('<Enter>', lambda _=None: self.close_button.config(bg='red'))
+        self.close_button.bind('<Leave>', lambda _=None: self.close_button.config(bg='white'))
+        self.close_button.bind('<ButtonPress-1>', lambda _=None: self.close_button.config(bg='maroon'))
+        self.close_button.bind('<ButtonRelease-1>', lambda _=None: [self.close_button.config(bg='white'),
+                                                                    self.shrink()])
+        self.close_button.pack(side=TOP, fill=X)
+        self.widgets_frame = ScrollableFrame(self)
+        self.widgets_frame.pack(side=TOP, expand=True, fill=BOTH)
+
+        self.widget.update_idletasks()
+        self.geometry(f'0x0+{self.widget.winfo_rootx()}+{self.widget.winfo_rooty()}')
+        self.wm_maxsize(max_width, max_height)
 
     def grow(self, event=None):
-        height = int(self.geometry().split('+')[0].split('x')[0])
-        width = int(self.geometry().split('+')[0].split('x')[1])
-        self.lift()
+        self.widget.update_idletasks()
+        self.update_idletasks()
+        self.geometry(f'+{self.widget.winfo_rootx()}+{self.widget.winfo_rooty()}')
+        self.wm_attributes('-alpha', 1)
         if self.by_height:
-            height += 22
-            if height < self.max_height and self.stopgrow is False:
-                self.geometry(f"{width}x{height}")
-                self.after(1, self.grow)
-            elif height == self.max_height:
-                self.geometry(f"{self.max_width}x{height}")
-                self.stopgrow = True
-                self.stopshrink = False
+            height = self.winfo_height()
+            if height >= self.max_height - self.speed:
+                height = self.max_height
+                self.geometry(f'{self.max_width}x{height}')
+                self.widget.focus_force()
+                return
+            height += self.speed
+            self.geometry(f'{self.max_width}x{height}')
         else:
-            width += 22
-            if width < self.max_width and self.stopgrow is False:
-                self.geometry(f"{width}x{height}")
-                self.after(1, self.grow)
-            elif width == self.max_width:
-                self.geometry(f"{self.max_width}x{height}")
-                self.stopgrow = True
-                self.stopshrink = False
+            width = self.winfo_width()
+            if width >= self.max_width - self.speed:
+                width = self.max_width
+                self.geometry(f'{width}x{self.max_height}')
+                self.widget.focus_force()
+                return
+            width += self.speed
+            self.geometry(f'{width}x{self.max_height}')
+        self.after(1, self.grow)
 
     def shrink(self, event=None):
-        height = int(self.geometry().split('+')[0].split('x')[0])
-        width = int(self.geometry().split('+')[0].split('x')[1])
+        self.widget.update_idletasks()
+        self.update_idletasks()
+        self.geometry(f'+{self.widget.winfo_rootx()}+{self.widget.winfo_rooty()}')
         if self.by_height:
-            height -= 22
-            if height > 0 and self.stopshrink is False:
-                self.geometry(f"{width}x{height}")
-                self.after(1, self.shrink)
-            elif height <= 0:
-                self.stopgrow = False
-                self.stopshrink = True
+            height = self.winfo_height()
+            if height <= self.speed:
+                height = 0
+                self.geometry(f'{self.max_width}x{height}')
+                self.wm_attributes('-alpha', 0)
+                self.widget.focus_force()
+                return
+            height -= self.speed
+            self.geometry(f'{self.max_width}x{height}')
         else:
-            width -= 22
-            if width > 0 and self.stopshrink is False:
-                self.geometry(f"{width}x{height}")
-                self.after(1, self.shrink)
-            elif width <= 0:
-                self.stopgrow = False
-                self.stopshrink = True
-
-
-class FadingWindowMenu(FadingWindow):
-    """
-    This class is particularly for the tkcalculator,
-    that's why it is inherited as a subclass of FadingWindow
-    """
-
-    def __init__(self, master, **kw):
-        """
-        Initialize the fading window side menu to the
-        FadingWindow class which is initialized into the
-        Toplevel widget of tkinter.
-
-        :param master: parent widget
-        """
-        FadingWindow.__init__(self, master, **kw)
+            width = self.winfo_width()
+            if width <= self.speed:
+                width = 0
+                self.geometry(f'{width}x{self.max_height}')
+                self.wm_attributes('-alpha', 0)
+                self.widget.focus_force()
+                return
+            width -= self.speed
+            self.geometry(f'{width}x{self.max_height}')
+        self.after(1, self.shrink)
 
 
 def main():
@@ -173,32 +207,78 @@ def main():
     # b.pack()
     # root.mainloop()
 
-    def _in(e):
-        nonlocal visible
-        visible = True
-        cl.grow(e)
 
-    def _out(e):
-        nonlocal visible
-        visible = False
-        cl.shrink(e)
 
-    def showwin(e=None):
+
+
+    # def _in(e):
+    #     nonlocal visible
+    #     visible = True
+    #     cl.grow(e)
+    #
+    # def _out(e):
+    #     nonlocal visible
+    #     visible = False
+    #     cl.shrink(e)
+    #
+    # def showwin(e=None):
+    #     nonlocal visible
+    #     root.update_idletasks()
+    #     cl.geometry(f'+{b.winfo_rootx()+2}+{b.winfo_rooty()+25}')
+    #     if visible is True:
+    #         _out(e)
+    #     else:
+    #         _in(e)
+    #
+    # visible = False
+    # root = Tk()
+    # root.geometry('500x500+0+0')
+    # cl = ShrinkingWindow(root, bg='red', by_height=True)
+    # cl.shrink()
+    # b = Label(root, text='Menu', font=('Consolas 14'))
+    # b.bind('<ButtonRelease-1>', showwin)
+    # b.pack()
+    # root.mainloop()
+
+
+
+
+
+    # root = Tk()
+    # root.geometry('100x100+300+50')
+    # b = Button(root, text='OPEN', font='Consolas 12')
+    # b.pack(side=LEFT)
+    # # ShrinkingWidthHeightWindows(b)
+    # wgt_list = []
+    # sf = ScrollableFrame(root)
+    # sf.pack(side=TOP, fill=BOTH, expand=TRUE)
+    # for i in range(100):
+    #     btn = Button(sf.widget_frame, text=f'Number {i}', width=100)
+    #     wgt_list.append(btn)
+    # sf.pack_multiple_widgets(*wgt_list, side=TOP)
+    # root.mainloop()
+
+
+
+
+
+    def cmd(e=None):
         nonlocal visible
-        cl.geometry(f'+{e.x_root+20}+{e.y_root+20}')
-        if visible is True:
-            _out(e)
+        if visible:
+            swwh.shrink()
+            visible = False
         else:
-            _in(e)
+            swwh.grow()
+            visible = True
 
     visible = False
     root = Tk()
-    root.geometry('500x500')
-    cl = ShrinkingWindow(root, bg='red', by_height=True)
-    cl.shrink()
-    b = Label(root, text='Menu', font=('Consolas 14'))
-    b.bind('<ButtonRelease-1>', showwin)
-    b.pack()
+    root.geometry('500x500+200+200')
+    btn = Button(root, text='Open', command=cmd)
+    btn.pack()
+    swwh = ShrinkingWidthHeightWindow(btn, 10, True, 600, 400)
+    for i in range(100):
+        Button(swwh.widgets_frame.widget_frame, text=f'Button {i}').pack(fill=BOTH, expand=True)
     root.mainloop()
 
 
