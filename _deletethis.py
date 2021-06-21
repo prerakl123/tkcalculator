@@ -434,11 +434,18 @@
 
 
 
-# import os
-# from converters import CurrencyConverter
-#
-# c = CurrencyConverter()
-# c.update_currencies(os.getcwd() + '\\converters\\currencies')
+
+
+
+
+
+
+
+
+##import os
+##from converters import CurrencyConverter
+##c = CurrencyConverter()
+##c.update_currencies()
 
 
 
@@ -781,3 +788,45 @@
 #     btn = tk.Button(root, text="test", command=application)
 #     btn.pack()
 #     root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import requests
+
+url = 'https://api.exchangerate.host/latest?base=USD'
+response = requests.get(url)
+data = response.json()
+
+print(data)
